@@ -1,4 +1,6 @@
-class AppError extends Error {
+import AppErrorInterface from '../interfaces/AppErrorInterface';
+
+class AppError extends Error implements AppErrorInterface {
   statusCode: number;
   status: string;
   isOperational: boolean;

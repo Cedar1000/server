@@ -1,14 +1,15 @@
 import { Schema, model, Model } from 'mongoose';
+import validator from 'validator';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
-import validator from 'validator';
 import tokenEncrypt from '../uitils/tokenEncrypt';
 import IUser from '../interfaces/userInterface';
+import AppError from '../uitils/appError';
 
 interface IUserMethods {
   correctPassword(p1: string, p2: string): Promise<Boolean>;
   changedPasswordAfter(jwt: any): Boolean;
-  createPasswordResetToken(): any;
+  createPasswordResetToken(): string;
 }
 
 type UserModel = Model<IUser, {}, IUserMethods>;
@@ -36,6 +37,11 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     minlength: [8, 'Password must be 8 or more characters'],
   },
 
+  passwordConfirm: {
+    type: String,
+    required: [true, 'User Must Provide Password'],
+  },
+
   passwordResetTokenExpires: Date,
   passwordChangedAt: Date,
   passwordResetToken: String,
@@ -44,8 +50,15 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
 // Document Middleware
 userSchema.pre('save', async function (next) {
   // 1) Hash Password
+
   if (this.isNew === true) {
-    this.password = await bcrypt.hash(this.password, 12);
+    if (this.password === this.passwordConfirm) {
+      this.password = await bcrypt.hash(this.password, 12);
+
+      this.passwordConfirm = undefined;
+    } else {
+      return next(new AppError('Passwords are not the same', 404));
+    }
   }
   next();
 });
