@@ -1,10 +1,8 @@
-import express, { Application } from 'express';
 import mongoose, { ConnectOptions } from 'mongoose';
 import dotenv from 'dotenv';
+import app from './app';
 
 dotenv.config();
-
-const app: Application = express();
 
 process.on('uncaughtException', (err) => {
   console.log('Uncaught Exception!! Shutting Down');
@@ -14,7 +12,7 @@ process.on('uncaughtException', (err) => {
 
 // const DB = process.env.DATABASE_CLOUD;
 const DB = process.env.DATABASE_LOCAL;
-console.log(DB);
+
 mongoose
   .connect(`${DB}`, {
     useNewUrlParser: true,
@@ -24,6 +22,6 @@ mongoose
     console.log('DB Connection successful');
   });
 
-const PORT = process.env['PORT'] || 5000;
+const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log('server running'));
+app.listen(PORT, () => console.log(`server running on port ${PORT}`));

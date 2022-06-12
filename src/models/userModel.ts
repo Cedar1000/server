@@ -31,6 +31,11 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     required: [true, 'A user must have a gender'],
   },
 
+  active: {
+    type: Boolean,
+    default: true,
+  },
+
   password: {
     type: String,
     required: [true, 'User Must Provide Password'],

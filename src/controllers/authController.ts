@@ -29,11 +29,11 @@ const createAndSendToken = (
 
 export const signup = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { firstName, lastName, email, password, passwordConfirm } = req.body;
+    const { name, email, gender, password, passwordConfirm } = req.body;
     const userData = {
-      firstName,
-      lastName,
+      name,
       email,
+      gender,
       password,
       passwordConfirm,
     };

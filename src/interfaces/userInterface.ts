@@ -1,6 +1,4 @@
-import { Document } from 'mongoose';
-
-export default interface IUser extends Document {
+export default interface IUser {
   name: string;
   email: string;
   avatar: string;
@@ -11,4 +9,5 @@ export default interface IUser extends Document {
   passwordResetTokenExpires: Date;
   passwordChangedAt: Date;
   passwordResetToken: string;
+  active: Boolean;
 }
