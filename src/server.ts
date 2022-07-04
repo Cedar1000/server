@@ -1,11 +1,10 @@
-import mongoose, { ConnectOptions } from 'mongoose';
-import dotenv from 'dotenv';
-import app from './app';
-
+import mongoose, { ConnectOptions } from "mongoose";
+import dotenv from "dotenv";
 dotenv.config();
+import app from "./app";
 
-process.on('uncaughtException', (err) => {
-  console.log('Uncaught Exception!! Shutting Down');
+process.on("uncaughtException", (err) => {
+  console.log("Uncaught Exception!! Shutting Down");
   console.log({ name: err.name, message: err.message });
   process.exit(1);
 });
@@ -19,7 +18,7 @@ mongoose
     useUnifiedTopology: true,
   } as ConnectOptions)
   .then(() => {
-    console.log('DB Connection successful');
+    console.log("DB Connection successful");
   });
 
 const PORT = process.env.PORT || 5000;
