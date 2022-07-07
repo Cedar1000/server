@@ -1,9 +1,13 @@
+import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library';
+
 import { Request, Response, NextFunction } from 'express';
 import { DocumentDefinition } from 'mongoose';
-import jwt from 'jsonwebtoken';
 import User from '../models/userModel';
 import catchAsync from '../uitils/catchAsync';
 import userInterface from '../interfaces/userInterface';
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const signToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
@@ -40,5 +44,20 @@ export const signup = catchAsync(
 
     const newUser = await User.create(userData);
     createAndSendToken(newUser, 201, res);
+  }
+);
+
+// handles google login
+
+export const googleSignIn = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { idToken } = req.body;
+
+    const response = await client.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    console.log(response);
   }
 );
