@@ -28,7 +28,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
   gender: {
     type: String,
     enum: ['male', 'female'],
-    required: [true, 'A user must have a gender'],
+    // required: [true, 'A user must have a gender'],
   },
 
   active: {
@@ -38,13 +38,13 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
 
   password: {
     type: String,
-    required: [true, 'User Must Provide Password'],
+    // required: [true, 'User Must Provide Password'],
     minlength: [8, 'Password must be 8 or more characters'],
   },
 
   passwordConfirm: {
     type: String,
-    required: [true, 'User Must Provide Password'],
+    // required: [true, 'User Must Provide Password'],
   },
 
   passwordResetTokenExpires: Date,

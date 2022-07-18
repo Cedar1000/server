@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
+import axios from 'axios';
+import googleapis from 'googleapis';
 
 import { Request, Response, NextFunction } from 'express';
 import { DocumentDefinition } from 'mongoose';
@@ -58,6 +60,21 @@ export const googleSignIn = catchAsync(
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    console.log(response);
+    const {
+      payload: { name, email, picture: avatar },
+    }: any = { ...response };
+
+    try {
+      const newUser = await User.collection.insertOne({
+        name,
+        email,
+        avatar,
+        active: true,
+      });
+
+      console.log(newUser);
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
