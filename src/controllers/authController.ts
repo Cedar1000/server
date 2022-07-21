@@ -72,7 +72,7 @@ export const googleSignIn = catchAsync(
         active: true,
       });
 
-      console.log(newUser);
+      console.log(newUser, 'new user');
     } catch (error) {
       console.log(error);
     }
