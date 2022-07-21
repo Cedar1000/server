@@ -4,6 +4,7 @@ export default interface IUser {
   email: string;
   avatar: string;
   gender: string;
+  type: string;
   password: string;
   passwordConfirm: string | undefined;
   dob: string;
