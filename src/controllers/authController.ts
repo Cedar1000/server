@@ -49,12 +49,13 @@ export const signup = catchAsync(
   }
 );
 
-// handles google login
-
-export const googleSignIn = catchAsync(
+// handles google Authentication
+export const googleAuthentication = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    //Get token from request body
     const { idToken } = req.body;
 
+    //veriffy token againt google's api
     const response = await client.verifyIdToken({
       idToken,
       audience: process.env.GOOGLE_CLIENT_ID,
@@ -64,7 +65,13 @@ export const googleSignIn = catchAsync(
       payload: { name, email, picture: avatar },
     }: any = { ...response };
 
-    try {
+    //Check if user already exists in DB
+    const user = await User.findOne({ email });
+
+    //If user exists login, else register
+    if (user) {
+      return res.status(200).json({ status: 'success', token: idToken, user });
+    } else {
       const newUser = await User.collection.insertOne({
         name,
         email,
@@ -72,9 +79,7 @@ export const googleSignIn = catchAsync(
         active: true,
       });
 
-      console.log(newUser);
-    } catch (error) {
-      console.log(error);
+      res.status(201).json({ status: 'success', token: idToken, newUser });
     }
   }
 );
