@@ -1,8 +1,8 @@
-export default interface Itrack {
+export default interface ITrack {
   cover: string;
   artist: string;
   title: string;
   url: string;
   duration: string;
-  features: [string];
+  features?: [string];
 }

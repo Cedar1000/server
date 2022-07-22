@@ -1,4 +1,4 @@
-import { Schema, model, Model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import Itrack from '../interfaces/track.interface';
 
 const trackSchema = new Schema<Itrack>({
