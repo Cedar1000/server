@@ -49,6 +49,39 @@ export const signup = catchAsync(
   }
 );
 
+export const login = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+
+    //1) check if email or password was passed in
+    if (!email || !password) {
+      return next(new AppError('Please Provide email and password!', 400));
+    }
+
+    //2) Check if  user exists && password is correct
+    const user = await User.findOne({ email }).select('+password');
+
+    if (!user) {
+      const err = new AppError('No User with that email', 404);
+
+      return next(err);
+    }
+
+    //Check if inputed password is correct
+    const correct = await user.schema.methods.correctPassword(
+      password,
+      user.password
+    );
+
+    if (!correct) {
+      return next(new AppError('Incorrect email or password', 401));
+    }
+
+    //3) If everything is ok, send token to client
+    createAndSendToken(user, 200, res);
+  }
+);
+
 //Restrict routes to only logged in users
 // exports.protect = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
 //   //1) Getting token and check if its there
