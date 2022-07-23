@@ -13,6 +13,12 @@ const albumSchema = new Schema<IAlbum>({
     required: [true, 'An album must have a cover'],
   },
 
+  genre: {
+    type: String,
+    enum: ['Pop', 'R&B', 'Rap', 'Blues'],
+    required: [true, 'A track must have a genre'],
+  },
+
   year: {
     type: Number,
     required: [true, 'An album must have a year'],

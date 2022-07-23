@@ -4,5 +4,6 @@ export default interface ITrack {
   title: string;
   url: string;
   duration: string;
+  genre: string;
   features?: [string];
 }

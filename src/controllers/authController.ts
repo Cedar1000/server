@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
-import axios from 'axios';
-import googleapis from 'googleapis';
+import { promisify } from 'util';
 
 import { Request, Response, NextFunction } from 'express';
 import { DocumentDefinition } from 'mongoose';
 import User from '../models/userModel';
 import catchAsync from '../uitils/catchAsync';
+import AppError from '../uitils/appError';
 import userInterface from '../interfaces/userInterface';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -48,6 +48,49 @@ export const signup = catchAsync(
     createAndSendToken(newUser, 201, res);
   }
 );
+
+//Restrict routes to only logged in users
+// exports.protect = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
+//   //1) Getting token and check if its there
+
+//   let token;
+//   if (
+//     req.headers.authorization &&
+//     req.headers.authorization.startsWith('Bearer')
+//   ) {
+//     token = req.headers.authorization.split(' ')[1];
+//   }
+
+//   //2) Validate token
+//   if (!token) {
+//     return next(
+//       new AppError('You are not logged in! Please login to get access', 401)
+//     );
+//   }
+
+//   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+//   //3) Check if user still exists
+//   const currentUser = await User.findById(decoded.id);
+//   if (!currentUser) {
+//     return next(
+//       new AppError('The user belonging to the token no longer exists.', 401)
+//     );
+//   }
+
+//   //4) Check if user changed password after jwt was issued
+//   if (currentUser.changedPasswordAfter(decoded.iat)) {
+//     return next(
+//       new AppError('User recently changed password! Please login  again', 401)
+//     );
+//   }
+
+//   // GRANT ACCESS TO ROUTE
+//   //@ts-ignore
+//   req.user = currentUser;
+
+//   next();
+// });
 
 // handles google Authentication
 export const googleAuthentication = catchAsync(

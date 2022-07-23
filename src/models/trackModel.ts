@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import Itrack from '../interfaces/track.interface';
+import Itrack from '../interfaces/track.Interface';
 
 const trackSchema = new Schema<Itrack>({
   cover: {
@@ -21,6 +21,12 @@ const trackSchema = new Schema<Itrack>({
   url: {
     type: String,
     required: [true, 'A track must have a url'],
+  },
+
+  genre: {
+    type: String,
+    enum: ['Pop', 'R&B', 'Rap', 'Blues'],
+    required: [true, 'A track must have a genre'],
   },
 
   duration: {

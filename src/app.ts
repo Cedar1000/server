@@ -12,7 +12,9 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+//ROUTERS
 import userRouter from './routes/userRoutes';
+import trackRouter from './routes/trackRoutes';
 
 //Body parser
 app.use(cors());
@@ -21,6 +23,7 @@ app.use(express.json({ limit: '10kb' }));
 //ROUTES
 app.get('/', (req, res) => res.send('Welcome'));
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/tracks', trackRouter);
 
 app.all('*', (req, res, next) => {
   console.log('no routes matched');
