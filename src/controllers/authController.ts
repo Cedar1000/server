@@ -82,48 +82,56 @@ export const login = catchAsync(
   }
 );
 
-//Restrict routes to only logged in users
-// exports.protect = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
-//   //1) Getting token and check if its there
+// Restrict routes to only logged in users
+export const protect = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    //1) Getting token and check if its there
 
-//   let token;
-//   if (
-//     req.headers.authorization &&
-//     req.headers.authorization.startsWith('Bearer')
-//   ) {
-//     token = req.headers.authorization.split(' ')[1];
-//   }
+    let token;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+    }
 
-//   //2) Validate token
-//   if (!token) {
-//     return next(
-//       new AppError('You are not logged in! Please login to get access', 401)
-//     );
-//   }
+    //2) Validate token
+    if (!token) {
+      return next(
+        new AppError('You are not logged in! Please login to get access', 401)
+      );
+    }
 
-//   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    console.log(token);
 
-//   //3) Check if user still exists
-//   const currentUser = await User.findById(decoded.id);
-//   if (!currentUser) {
-//     return next(
-//       new AppError('The user belonging to the token no longer exists.', 401)
-//     );
-//   }
+    const decoded: any = await promisify<string, string>(jwt.verify)(
+      token,
+      process.env.JWT_SECRET as string
+    );
+    console.log(decoded);
 
-//   //4) Check if user changed password after jwt was issued
-//   if (currentUser.changedPasswordAfter(decoded.iat)) {
-//     return next(
-//       new AppError('User recently changed password! Please login  again', 401)
-//     );
-//   }
+    // 3) Check if user still exists
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+      return next(
+        new AppError('The user belonging to the token no longer exists.', 401)
+      );
+    }
 
-//   // GRANT ACCESS TO ROUTE
-//   //@ts-ignore
-//   req.user = currentUser;
+    // 4) Check if user changed password after jwt was issued
+    if (currentUser.schema.methods.changedPasswordAfter(decoded.iat)) {
+      return next(
+        new AppError('User recently changed password! Please login  again', 401)
+      );
+    }
 
-//   next();
-// });
+    // GRANT ACCESS TO ROUTE
+    // @ts-ignore
+    req.user = currentUser;
+
+    next();
+  }
+);
 
 // handles google Authentication
 export const googleAuthentication = catchAsync(
