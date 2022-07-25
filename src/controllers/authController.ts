@@ -102,13 +102,10 @@ export const protect = catchAsync(
       );
     }
 
-    console.log(token);
-
     const decoded: any = await promisify<string, string>(jwt.verify)(
       token,
       process.env.JWT_SECRET as string
     );
-    console.log(decoded);
 
     // 3) Check if user still exists
     const currentUser = await User.findById(decoded.id);
