@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { authorizeUser } from '../middlewares/track.Middleware';
 
 import {
   createAlbum,
@@ -10,10 +11,10 @@ import {
 
 const router = Router();
 
-router.route('/album').post(createAlbum).get(getAllAblums);
+router.route('/album').post(authorizeUser, createAlbum).get(getAllAblums);
 
 router
-  .route('/Album/:id')
+  .route('/album/:id')
   .get(getSingleAblum)
   .patch(updateAblum)
   .delete(deleteAblum);

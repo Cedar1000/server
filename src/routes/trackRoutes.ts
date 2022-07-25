@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { authorizeUser } from '../middlewares/track.Middleware';
 
 import {
   createTrack,
@@ -10,7 +11,7 @@ import {
 
 const router = Router();
 
-router.route('/track').post(createTrack).get(getAllTracks);
+router.route('/track').post(authorizeUser, createTrack).get(getAllTracks);
 
 router
   .route('/track/:id')
