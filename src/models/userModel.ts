@@ -3,7 +3,7 @@ import validator from 'validator';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import tokenEncrypt from '../uitils/tokenEncrypt';
-import IUser from '../interfaces/userInterface';
+import IUser from '../interfaces/user.Interface';
 import AppError from '../uitils/appError';
 
 interface IUserMethods {

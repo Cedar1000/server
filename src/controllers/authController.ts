@@ -7,7 +7,7 @@ import { DocumentDefinition } from 'mongoose';
 import User from '../models/userModel';
 import catchAsync from '../uitils/catchAsync';
 import AppError from '../uitils/appError';
-import userInterface from '../interfaces/userInterface';
+import userInterface from '../interfaces/user.Interface';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
