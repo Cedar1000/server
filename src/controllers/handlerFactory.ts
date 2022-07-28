@@ -4,9 +4,8 @@ import AppError from '../uitils/appError';
 
 export const getAll = (Model: any) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    let filter = {};
-    if (req.params.postId) filter = { post: req.params.postId };
-    if (req.params.category) filter = { category: req.params.category };
+    //@ts-ignore
+    let filter = req.filterOptions ? req.filterOptions : {};
 
     const doc = await Model.find(filter);
 

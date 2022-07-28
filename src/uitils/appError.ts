@@ -1,4 +1,4 @@
-import AppErrorInterface from '../interfaces/AppErrorInterface';
+import AppErrorInterface from '../interfaces/appError.Interface';
 
 class AppError extends Error implements AppErrorInterface {
   statusCode: number;

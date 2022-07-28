@@ -2,6 +2,8 @@ import { Schema, model } from 'mongoose';
 import IPlaylist from '../interfaces/playlist.Interface';
 
 const playlistSchema = new Schema<IPlaylist>({
+  user: { type: Schema.Types.ObjectId, ref: 'User' },
+
   title: {
     type: String,
     required: [true, 'A track must have a title'],
@@ -10,4 +12,4 @@ const playlistSchema = new Schema<IPlaylist>({
   tracks: [{ type: Schema.Types.ObjectId, ref: 'Track' }],
 });
 
-export default model('Track', playlistSchema);
+export default model('Playlist', playlistSchema);

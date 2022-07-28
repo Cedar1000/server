@@ -16,6 +16,7 @@ if (process.env.NODE_ENV === 'development') {
 import userRouter from './routes/userRoutes';
 import trackRouter from './routes/trackRoutes';
 import albumRouter from './routes/albumRoutes';
+import playlistRouter from './routes/playlistRoutes';
 
 //Body parser
 app.use(cors());
@@ -26,6 +27,7 @@ app.get('/', (req, res) => res.send('Welcome'));
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tracks', trackRouter);
 app.use('/api/v1/album', albumRouter);
+app.use('/api/v1/playlist', playlistRouter);
 
 app.all('*', (req, res, next) => {
   console.log('no routes matched');
