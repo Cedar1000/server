@@ -37,4 +37,11 @@ const trackSchema = new Schema<Itrack>({
   features: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 
+//QUERY MIDDLEWARE
+trackSchema.pre(/^find/, function (next) {
+  this.populate({ path: 'artist features', options: { _recursed: true } });
+
+  next();
+});
+
 export default model('Track', trackSchema);

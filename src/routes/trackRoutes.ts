@@ -14,10 +14,6 @@ const router = Router();
 
 router.route('/').post(protect, authorizeUser, createTrack).get(getAllTracks);
 
-router
-  .route('/track/:id')
-  .get(getSingleTrack)
-  .patch(updateTrack)
-  .delete(deleteTrack);
+router.route('/:id').get(getSingleTrack).patch(updateTrack).delete(deleteTrack);
 
 export default router;
