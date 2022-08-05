@@ -1,7 +1,9 @@
-import { add } from '../controllers/trackController';
+import request from 'supertest';
+import app from '../app';
 
-describe('This is a test', () => {
-  it('should pass', () => {
-    expect(add(1, 2)).toBe(3);
+describe('This is a test for track', () => {
+  it('given the user is not logged in', async () => {
+    const { statusCode } = await request(app).post('/api/v1/tracks');
+    expect(statusCode).toBe(401);
   });
 });
