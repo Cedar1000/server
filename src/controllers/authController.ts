@@ -11,7 +11,7 @@ import userInterface from '../interfaces/user.Interface';
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-const signToken = (id: string) => {
+export const signToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });

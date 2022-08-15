@@ -41,6 +41,7 @@ export const getOne = (Model: any, popOptions?: any) =>
 
 export const createOne = (Model: any) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.body);
     const doc = await Model.create(req.body);
 
     return res.status(201).json({
