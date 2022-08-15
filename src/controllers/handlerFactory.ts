@@ -43,7 +43,7 @@ export const createOne = (Model: any) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const doc = await Model.create(req.body);
 
-    res.status(201).json({
+    return res.status(201).json({
       status: 'success',
       doc,
     });

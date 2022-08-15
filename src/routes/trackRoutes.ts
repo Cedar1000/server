@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authorizeUser } from '../middlewares/track.Middleware';
+import { authorizeUser, testMiddleware } from '../middlewares/track.Middleware';
 import { protect } from '../controllers/authController';
 
 import {
@@ -12,7 +12,12 @@ import {
 
 const router = Router();
 
-router.route('/').post(protect, authorizeUser, createTrack).get(getAllTracks);
+router
+  .route('/')
+  .post(protect, authorizeUser, createTrack)
+  .get(protect, getAllTracks);
+
+router.route('/test').get(testMiddleware);
 
 router.route('/:id').get(getSingleTrack).patch(updateTrack).delete(deleteTrack);
 

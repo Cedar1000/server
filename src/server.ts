@@ -24,3 +24,8 @@ mongoose
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+
+export default (opts: any = {}, cb?: () => void | undefined) => {
+  const port = opts.port || 3000;
+  return app.listen(port, '', 0, cb);
+};

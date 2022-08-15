@@ -18,3 +18,13 @@ export const authorizeUser = catchAsync(
     next();
   }
 );
+
+export const testMiddleware = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    //check if logged in user is an artist
+
+    //@ts-ignore
+
+    return next(new AppError('This action is valid for only artists', 403));
+  }
+);

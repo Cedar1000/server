@@ -70,7 +70,7 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
   err.status = err.status || 'error';
 
   if (process.env.NODE_ENV?.trim() === 'development') {
-    sendErrorDev(err, res);
+    return sendErrorDev(err, res);
   } else if (process.env.NODE_ENV?.trim() === 'production') {
     let error = { ...err, message: err.message };
     if (error.kind === 'ObjectId') error = handleCastErrorDB(error);
@@ -81,6 +81,6 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
     if (error.name === 'TokenExpiresError')
       error = handleJWTExpiredError(error);
 
-    sendErrorProd(error, res);
+    return sendErrorProd(error, res);
   }
 };

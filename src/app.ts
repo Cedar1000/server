@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Response, Request } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 
@@ -7,7 +7,7 @@ import globalErrorHandler from './controllers/errorController';
 
 //Start express app
 const app = express();
-console.log(process.env.NODE_ENV);
+
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
@@ -21,6 +21,10 @@ import playlistRouter from './routes/playlistRoutes';
 //Body parser
 app.use(cors());
 app.use(express.json({ limit: '10kb' }));
+
+app.get('/test', (req: Request, res: Response) => {
+  res.status(200).json({ name: 'john' });
+});
 
 //ROUTES
 app.get('/', (req, res) => res.send('Welcome'));
