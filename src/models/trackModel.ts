@@ -4,7 +4,7 @@ import Itrack from '../interfaces/track.Interface';
 const trackSchema = new Schema<Itrack>({
   cover: {
     type: String,
-    required: [true, 'A track must have a schema'],
+    required: [true, 'A track must have a cover'],
   },
 
   artist: {

@@ -5,20 +5,22 @@ import express from 'express';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import trackRouter from '../routes/trackRoutes';
 import { signToken } from '../controllers/authController';
+import User from '../models/userModel';
+import { DocumentDefinition } from 'mongoose';
+import userInterface from '../interfaces/user.Interface';
 
 const app = express();
-const id = '62dc24cd2d4e0320fd4844f5';
 
 app.use(express.json());
 
 app.use('/api/v1/tracks', trackRouter);
 
 const payload = {
-  artist: '62dc24cd2d4e0320fd4844f5',
   title: 'test title',
   url: 'test url',
   genre: 'Pop',
   duration: '4:15',
+  cover: 'test cover',
 };
 
 describe('Create Track route', () => {
@@ -26,6 +28,19 @@ describe('Create Track route', () => {
     const mongoServer = await MongoMemoryServer.create();
 
     await mongoose.connect(mongoServer.getUri());
+
+    await User.create({
+      name: 'Ced',
+      email: 'ced@ced.com',
+      avatar: 'avatar',
+      type: 'artist',
+      gender: 'male',
+      active: true,
+      password: '$2a$12$qg9ss8zwymhhfNf5UdE4SODPT3ZXfMFi038XfM05TvxXjkU/3LEsa',
+      passwordConfirm:
+        '$2a$12$qg9ss8zwymhhfNf5UdE4SODPT3ZXfMFi038XfM05TvxXjkU/3LEsa',
+      __v: 0,
+    });
   });
 
   afterAll(async () => {
@@ -42,15 +57,19 @@ describe('Create Track route', () => {
   });
 
   describe('given the user is logged in', () => {
+    jest.setTimeout(5000);
     test('should return 201', async () => {
-      const jwt = signToken(id);
+      const user: DocumentDefinition<userInterface> | any = await User.findOne({
+        email: 'ced@ced.com',
+      });
+
+      const jwt = signToken(user._id);
 
       const res = await request(app)
         .post('/api/v1/tracks')
         .set('Authorization', `Bearer ${jwt}`)
-        .send({ ...payload, _id: id });
+        .send({ ...payload, artist: user.artist });
 
-      console.log(res);
       expect(res.statusCode).toBe(201);
     });
   });
