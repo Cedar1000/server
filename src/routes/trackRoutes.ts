@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authorizeUser, testMiddleware } from '../middlewares/track.Middleware';
+import { isArtist, isTrackArtist } from '../middlewares/track.Middleware';
 import { protect } from '../controllers/authController';
 
 import {
@@ -14,11 +14,13 @@ const router = Router();
 
 router
   .route('/')
-  .post(protect, authorizeUser, createTrack)
+  .post(protect, isArtist, createTrack)
   .get(protect, getAllTracks);
 
-router.route('/test').get(testMiddleware);
-
-router.route('/:id').get(getSingleTrack).patch(updateTrack).delete(deleteTrack);
+router
+  .route('/:id')
+  .get(getSingleTrack)
+  .patch(isTrackArtist, updateTrack)
+  .delete(isTrackArtist, deleteTrack);
 
 export default router;

@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
+import Track from '../models/trackModel';
 import catchAsync from '../uitils/catchAsync';
 import AppError from '../uitils/appError';
 
-export const authorizeUser = catchAsync(
+export const isArtist = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     //check if logged in user is an artist
 
@@ -19,12 +20,13 @@ export const authorizeUser = catchAsync(
   }
 );
 
-export const testMiddleware = catchAsync(
+export const isTrackArtist = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    //check if logged in user is an artist
+    const track = await Track.findById(req.params.id);
 
     //@ts-ignore
-
-    return next(new AppError('This action is valid for only artists', 403));
+    if (req.user.id !== track.artist) {
+      return next(new AppError('You are unable to perform this action!', 403));
+    }
   }
 );
