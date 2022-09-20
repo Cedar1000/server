@@ -6,10 +6,17 @@
   "scripts": {
     "start": "node dist/server.js",
     "test": "jest --detectOpenHandles",
-    "test:watch": "jest --watchAll",
+    "test:watch": "jest --watchAll --no-cache",
     "test:coverage": "jest --coverage",
     "dev": "nodemon src/server.ts",
     "build": "tsc -p ."
+  },
+
+  "jest":{
+    "preset":"ts-jest",
+    "testEnvironment":"node",
+    "setupFiles": ["dotenv/config"],
+    "setupFilesAfterEnv":["./src/test/setup.ts"]
   },
   "keywords": [],
   "author": "",

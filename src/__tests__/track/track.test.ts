@@ -1,14 +1,13 @@
 import request from 'supertest';
-import mongoose from 'mongoose';
 import express from 'express';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 
 import trackRouter from '../../routes/trackRoutes';
 import { signToken } from '../../controllers/authController';
 import User from '../../models/userModel';
 import { DocumentDefinition } from 'mongoose';
 import userInterface from '../../interfaces/user.Interface';
-import { user, payload } from '../../test-payloads/track.payloads';
+import { payload } from '../../test/payloads/track.payloads';
+import { user as userPayload } from '../../test/payloads/user.payloads';
 
 const app = express();
 
@@ -17,19 +16,6 @@ app.use(express.json());
 app.use('/api/v1/tracks', trackRouter);
 
 describe('Track Test', () => {
-  beforeAll(async () => {
-    const mongoServer = await MongoMemoryServer.create();
-
-    await mongoose.connect(mongoServer.getUri());
-
-    await User.create(user);
-  });
-
-  afterAll(async () => {
-    await mongoose.disconnect();
-    await mongoose.connection.close();
-  });
-
   describe('Create And Get Tracks route', () => {
     describe('given the user is not logged in', () => {
       test('should return 401', async () => {
