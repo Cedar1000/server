@@ -42,11 +42,13 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     type: String,
     // required: [true, 'User Must Provide Password'],
     minlength: [8, 'Password must be 8 or more characters'],
+    select: false,
   },
 
   passwordConfirm: {
     type: String,
     // required: [true, 'User Must Provide Password'],
+    select: false,
   },
 
   passwordResetTokenExpires: Date,

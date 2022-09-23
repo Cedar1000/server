@@ -20,7 +20,7 @@ router
 router
   .route('/:id')
   .get(getSingleTrack)
-  .patch(isTrackArtist, updateTrack)
-  .delete(isTrackArtist, deleteTrack);
+  .patch(protect, isTrackArtist, updateTrack)
+  .delete(protect, isTrackArtist, deleteTrack);
 
 export default router;
