@@ -25,8 +25,10 @@ export const isTrackArtist = catchAsync(
     const track = await Track.findById(req.params.id);
 
     //@ts-ignore
-    if (req.user.id !== track.artist) {
+    if (req.user.id !== track.artist.id) {
       return next(new AppError('You are unable to perform this action!', 403));
     }
+
+    next();
   }
 );

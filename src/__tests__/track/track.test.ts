@@ -6,13 +6,16 @@ import Track from '../../models/trackModel';
 
 import { payload } from '../../test/payloads/track.payloads';
 import getJwt from '../../uitils/getMockJWT';
-import { verify } from 'jsonwebtoken';
-import { promisify } from 'util';
 
 const app = express();
 let jwt: string;
+let userID: any;
 
-beforeAll(async () => (jwt = await getJwt()));
+beforeAll(async () => {
+  const { token, userId } = await getJwt();
+  jwt = token;
+  userID = userId;
+});
 
 app.use(express.json());
 
@@ -60,7 +63,7 @@ describe('Track Test', () => {
     });
   });
 
-  describe('Edit Track route', () => {
+  describe('Edit Track ', () => {
     describe('given the user is not logged in', () => {
       test('should return 401', async () => {
         const track: any = await Track.findOne().select('_id');
@@ -75,25 +78,32 @@ describe('Track Test', () => {
 
     describe('given the logged in user is not the owner of the track', () => {
       test('It should return 401', async () => {
-        const decoded: any = await promisify<string, string>(verify)(
-          jwt,
-          process.env.JWT_SECRET as string
-        );
-
         const track: any = await Track.findOne({
-          artist: { $not: { $ne: decoded.id } },
+          artist: { $ne: userID },
         });
 
         const res = await request(app)
           .patch(`/api/v1/tracks/${track._id}`)
+          .set('Authorization', `Bearer ${jwt}`)
           .send({});
 
-        expect(res.statusCode).toBe(401);
+        expect(res.statusCode).toBe(403);
       });
     });
 
     describe('given the logged in is the track owner', () => {
-      test('It should return 200', async () => {});
+      test('It should return 200', async () => {
+        const track: any = await Track.findOne({
+          artist: userID,
+        });
+
+        const res = await request(app)
+          .patch(`/api/v1/tracks/${track._id}`)
+          .set('Authorization', `Bearer ${jwt}`)
+          .send({});
+
+        expect(res.statusCode).toBe(200);
+      });
     });
   });
 });

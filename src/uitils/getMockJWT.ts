@@ -8,9 +8,9 @@ const getJwt: Function = async () => {
     email: 'ced@ced.com',
   });
 
-  const jwt = signToken(user._id);
+  const token = signToken(user._id);
 
-  return jwt;
+  return { token, userId: user._id };
 };
 
 export default getJwt;
