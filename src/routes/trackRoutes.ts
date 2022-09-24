@@ -12,15 +12,14 @@ import {
 
 const router = Router();
 
-router
-  .route('/')
-  .post(protect, isArtist, createTrack)
-  .get(protect, getAllTracks);
+router.use(protect);
+
+router.route('/').post(isArtist, createTrack).get(getAllTracks);
 
 router
   .route('/:id')
   .get(getSingleTrack)
-  .patch(protect, isTrackArtist, updateTrack)
-  .delete(protect, isTrackArtist, deleteTrack);
+  .patch(isTrackArtist, updateTrack)
+  .delete(isTrackArtist, deleteTrack);
 
 export default router;

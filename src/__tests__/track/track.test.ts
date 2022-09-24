@@ -63,6 +63,35 @@ describe('Track Test', () => {
     });
   });
 
+  describe('Get Single Track', () => {
+    describe('given the user is not logged in', () => {
+      test('should return 401', async () => {
+        const track: any = await Track.findOne().select('_id');
+
+        const res = await request(app)
+          .get(`/api/v1/tracks/${track._id}`)
+          .send({});
+
+        expect(res.statusCode).toBe(401);
+      });
+    });
+
+    describe('given the user is logged in', () => {
+      test('It should return 200', async () => {
+        const track: any = await Track.findOne({
+          artist: userID,
+        });
+
+        const res = await request(app)
+          .patch(`/api/v1/tracks/${track._id}`)
+          .set('Authorization', `Bearer ${jwt}`)
+          .send({});
+
+        expect(res.statusCode).toBe(200);
+      });
+    });
+  });
+
   describe('Edit Track ', () => {
     describe('given the user is not logged in', () => {
       test('should return 401', async () => {
