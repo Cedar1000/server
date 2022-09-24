@@ -106,4 +106,48 @@ describe('Track Test', () => {
       });
     });
   });
+
+  describe('Delete Track', () => {
+    describe('given the user is not logged in', () => {
+      test('should return 401', async () => {
+        const track: any = await Track.findOne().select('_id');
+
+        const res = await request(app)
+          .delete(`/api/v1/tracks/${track._id}`)
+          .send({});
+
+        expect(res.statusCode).toBe(401);
+      });
+    });
+
+    describe('given the logged in user is not the owner of the track', () => {
+      test('It should return 401', async () => {
+        const track: any = await Track.findOne({
+          artist: { $ne: userID },
+        });
+
+        const res = await request(app)
+          .delete(`/api/v1/tracks/${track._id}`)
+          .set('Authorization', `Bearer ${jwt}`)
+          .send({});
+
+        expect(res.statusCode).toBe(403);
+      });
+    });
+
+    describe('given the logged in is the track owner', () => {
+      test('It should return 200', async () => {
+        const track: any = await Track.findOne({
+          artist: userID,
+        });
+
+        const res = await request(app)
+          .delete(`/api/v1/tracks/${track._id}`)
+          .set('Authorization', `Bearer ${jwt}`)
+          .send({});
+
+        expect(res.statusCode).toBe(204);
+      });
+    });
+  });
 });
