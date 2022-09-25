@@ -2,6 +2,7 @@ import request from 'supertest';
 import express from 'express';
 
 import userRouter from '../userRoutes';
+import { payload } from '../../test/payloads/user.payloads';
 
 const app = express();
 
@@ -53,6 +54,44 @@ describe('User Authentication', () => {
   });
 
   describe('User Sign Up', () => {
-    describe('Given email is invalid', () => {});
+    describe('Given email is invalid', () => {
+      test('It should return 500', async () => {
+        const res = await request(app)
+          .post('/api/v1/users/signup')
+          .send({ email: 'dhde7es', password: 'test1234' });
+
+        expect(res.statusCode).toBe(500);
+      });
+    });
+
+    describe('Given email already exists', () => {
+      test('It should return 500', async () => {
+        const res = await request(app)
+          .post('/api/v1/users/signup')
+          .send(payload);
+
+        expect(res.statusCode).toBe(500);
+      });
+    });
+
+    describe('Given passwords do not match', () => {
+      test('It should return 500', async () => {
+        const res = await request(app)
+          .post('/api/v1/users/signup')
+          .send({ ...payload, password: 'test', email: 'new@new.com' });
+
+        expect(res.statusCode).toBe(500);
+      });
+    });
+
+    describe('Given all fields are valid', () => {
+      test('It should return 500', async () => {
+        const res = await request(app)
+          .post('/api/v1/users/signup')
+          .send({ ...payload, email: 'new@new.com' });
+
+        expect(res.statusCode).toBe(201);
+      });
+    });
   });
 });

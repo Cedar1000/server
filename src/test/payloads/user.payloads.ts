@@ -33,3 +33,15 @@ export const users = [
     __v: 0,
   },
 ];
+
+export const payload = {
+  name: 'John',
+  email: 'john@doe.com',
+  avatar: 'avatar',
+  type: 'artist',
+  gender: 'male',
+  active: true,
+  password: 'test1234',
+  passwordConfirm: 'test1234',
+  __v: 0,
+};
