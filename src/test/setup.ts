@@ -1,24 +1,39 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
-import app from '../app';
+
+import express from 'express';
 import { users as usersArray } from './payloads/user.payloads';
 import { tracks } from './payloads/track.payloads';
 import getJwt from '../uitils/getMockJWT';
-import IUser from '../interfaces/user.Interface';
+
+//ROUTERS
+import albumRouter from '../routes/albumRoutes';
+import trackRouter from '../routes/trackRoutes';
+import playlistRouter from '../routes/playlistRoutes';
+import userRouter from '../routes/userRoutes';
 
 import User from '../models/userModel';
 import Track from '../models/trackModel';
 
+const app = express();
+
+app.use(express.json());
+
+//ROUTES
+app.use('/api/v1/album', albumRouter);
+app.use('/api/v1/tracks', trackRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/playlist', playlistRouter);
+
 let mongo: any;
-let jwt: string;
-let userID: any;
+export let jwt: string;
+export let userID: any;
 
 beforeAll(async () => {
   mongo = await MongoMemoryServer.create();
   const mongoUri = await mongo.getUri();
   await mongoose.connect(mongoUri);
 
-  // const users = await User.insertMany(usersArray);
   let users: any = usersArray.map(async (user) => await User.create(user));
 
   users = await Promise.all(users);
@@ -51,3 +66,5 @@ afterAll(async () => {
   await mongoose.disconnect();
   await mongoose.connection.close();
 });
+
+export default app;

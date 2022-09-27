@@ -2,6 +2,11 @@ import { Schema, model, Model } from 'mongoose';
 import IAlbum from '../interfaces/album.Interface';
 
 const albumSchema = new Schema<IAlbum>({
+  name: {
+    type: String,
+    required: [true, 'An album must have a name'],
+  },
+
   artist: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -24,10 +29,7 @@ const albumSchema = new Schema<IAlbum>({
     required: [true, 'An album must have a year'],
   },
 
-  numberOfSongs: {
-    type: Number,
-    required: [true, 'An album must have a year'],
-  },
+  numberOfSongs: { type: Number },
 
   tracks: [
     {
@@ -35,6 +37,10 @@ const albumSchema = new Schema<IAlbum>({
       ref: 'Track',
     },
   ],
+});
+
+albumSchema.pre('save', async function () {
+  this.numberOfSongs = this.tracks.length;
 });
 
 export default model('Album', albumSchema);

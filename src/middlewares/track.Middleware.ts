@@ -16,6 +16,7 @@ export const isArtist = catchAsync(
     //If logged in user is an artist, set their id on the track
     //@ts-ignore
     req.body.artist = req.user.id;
+
     next();
   }
 );

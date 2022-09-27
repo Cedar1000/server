@@ -1,13 +1,12 @@
 import request from 'supertest';
-import express from 'express';
 
-import trackRouter from '../trackRoutes';
+import app from '../../test/setup';
+
 import Track from '../../models/trackModel';
 
 import { payload } from '../../test/payloads/track.payloads';
 import getJwt from '../../uitils/getMockJWT';
 
-const app = express();
 let jwt: string;
 let userID: any;
 
@@ -16,10 +15,6 @@ beforeAll(async () => {
   jwt = token;
   userID = userId;
 });
-
-app.use(express.json());
-
-app.use('/api/v1/tracks', trackRouter);
 
 describe('Track Test', () => {
   describe('Create Track ', () => {

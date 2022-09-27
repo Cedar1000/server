@@ -1,5 +1,7 @@
 import { Router } from 'express';
-import { isArtist } from '../middlewares/track.Middleware';
+import { isArtist, isTrackArtist } from '../middlewares/track.Middleware';
+import { setArtist } from '../middlewares/album.Middleware';
+import { protect } from '../controllers/authController';
 
 import {
   createAlbum,
@@ -11,12 +13,14 @@ import {
 
 const router = Router();
 
-router.route('/album').post(isArtist, createAlbum).get(getAllAblums);
+router.use(protect);
+
+router.route('/').post(isArtist, setArtist, createAlbum).get(getAllAblums);
 
 router
   .route('/album/:id')
   .get(getSingleAblum)
-  .patch(updateAblum)
-  .delete(deleteAblum);
+  .patch(isTrackArtist, updateAblum)
+  .delete(isTrackArtist, deleteAblum);
 
 export default router;

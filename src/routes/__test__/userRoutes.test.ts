@@ -1,14 +1,7 @@
 import request from 'supertest';
-import express from 'express';
+import app from '../../test/setup';
 
-import userRouter from '../userRoutes';
 import { payload } from '../../test/payloads/user.payloads';
-
-const app = express();
-
-app.use(express.json());
-
-app.use('/api/v1/users', userRouter);
 
 describe('User Authentication', () => {
   describe('User Login', () => {
