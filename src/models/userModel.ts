@@ -25,7 +25,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>({
 
   avatar: { type: String, default: 'avatar' },
 
-  type: { type: String, enum: ['artist', 'listener'], default: 'listener' },
+  type: { type: String, enum: ['artist', 'streamer'], default: 'streamer' },
 
   gender: {
     type: String,

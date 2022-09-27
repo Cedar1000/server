@@ -3,6 +3,9 @@ import request from 'supertest';
 import app from '../../test/setup';
 import getJwt from '../../uitils/getMockJWT';
 import { payload } from '../../test/payloads/album.payloads';
+import { signToken } from '../../controllers/authController';
+
+import User from '../../models/userModel';
 
 let jwt: string;
 let userID: any;
@@ -20,6 +23,21 @@ describe('Album Test', () => {
         const res = await request(app).post('/api/v1/album');
 
         expect(res.statusCode).toBe(401);
+      });
+    });
+
+    describe('Given the logged in user is not an artist', () => {
+      test('should return 403', async () => {
+        const streamer: any = await User.findOne({ email: 'dan@dan.com' });
+
+        const token = signToken(streamer.id);
+
+        const res = await request(app)
+          .post('/api/v1/album')
+          .set('Authorization', `Bearer ${token}`)
+          .send(payload);
+
+        expect(res.statusCode).toBe(403);
       });
     });
 

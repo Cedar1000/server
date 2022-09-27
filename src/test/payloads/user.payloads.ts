@@ -14,7 +14,7 @@ export const users = [
     name: 'Dan',
     email: 'dan@dan.com',
     avatar: 'avatar',
-    type: 'artist',
+    type: 'streamer',
     gender: 'female',
     active: true,
     password: 'test1234',
