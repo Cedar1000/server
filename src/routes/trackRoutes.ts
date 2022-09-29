@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { isArtist, isTrackArtist } from '../middlewares/track.Middleware';
+import { isArtist, isTrackArtist } from '../middlewares/artist.Middleware';
 import { protect } from '../controllers/authController';
 
 import {

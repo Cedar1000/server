@@ -43,4 +43,11 @@ albumSchema.pre('save', async function () {
   this.numberOfSongs = this.tracks.length;
 });
 
+//QUERY MIDDLEWARE
+albumSchema.pre(/^find/, function (next) {
+  this.populate({ path: 'artist tracks', options: { _recursed: true } });
+
+  next();
+});
+
 export default model('Album', albumSchema);

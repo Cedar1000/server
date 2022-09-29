@@ -95,4 +95,44 @@ describe('Album Test', () => {
       });
     });
   });
+
+  describe('Delete Album', () => {
+    describe('Given the user is not logged in', () => {
+      test('It should return 401', async () => {
+        const album: any = await Album.findOne();
+
+        const res = await request(app).get(`/api/v1/album/${album._id}`);
+
+        expect(res.statusCode).toBe(401);
+      });
+    });
+
+    describe('given the logged in user is not the owner of the album', () => {
+      test('It should return 401', async () => {
+        const album: any = await Album.findOne({
+          artist: { $ne: userID },
+        });
+
+        const res = await request(app)
+          .delete(`/api/v1/album/${album._id}`)
+          .set('Authorization', `Bearer ${jwt}`);
+
+        expect(res.statusCode).toBe(403);
+      });
+    });
+
+    describe('given the logged in user is the album owner', () => {
+      test('It should return 204', async () => {
+        const album: any = await Album.findOne({
+          artist: userID,
+        });
+
+        const res = await request(app)
+          .delete(`/api/v1/album/${album._id}`)
+          .set('Authorization', `Bearer ${jwt}`);
+
+        expect(res.statusCode).toBe(204);
+      });
+    });
+  });
 });

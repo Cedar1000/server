@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import Track from '../models/trackModel';
 import catchAsync from '../uitils/catchAsync';
 import AppError from '../uitils/appError';
+import Album from '../models/albumModel';
 
 export const setArtist = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -38,6 +39,19 @@ export const isTrackArtist = catchAsync(
 
     //@ts-ignore
     if (req.user.id !== track.artist.id) {
+      return next(new AppError('You are unable to perform this action!', 403));
+    }
+
+    next();
+  }
+);
+
+export const isAlbumOwner = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const album = await Album.findById(req.params.id);
+
+    //@ts-ignore
+    if (req.user.id !== album.artist.id) {
       return next(new AppError('You are unable to perform this action!', 403));
     }
 

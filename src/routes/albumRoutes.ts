@@ -2,7 +2,7 @@ import { Router } from 'express';
 import {
   isArtist,
   setArtist,
-  isTrackArtist,
+  isAlbumOwner,
 } from '../middlewares/artist.Middleware';
 import { protect } from '../controllers/authController';
 
@@ -23,7 +23,7 @@ router.route('/').post(isArtist, setArtist, createAlbum).get(getAllAblums);
 router
   .route('/:id')
   .get(getSingleAblum)
-  .patch(isTrackArtist, updateAblum)
-  .delete(isTrackArtist, deleteAblum);
+  .patch(isAlbumOwner, updateAblum)
+  .delete(isAlbumOwner, deleteAblum);
 
 export default router;

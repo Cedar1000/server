@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import express from 'express';
 import { users as usersArray } from './payloads/user.payloads';
 import { tracks } from './payloads/track.payloads';
+import { albums } from './payloads/album.payloads';
 import getJwt from '../uitils/getMockJWT';
 
 //ROUTERS
@@ -14,6 +15,7 @@ import userRouter from '../routes/userRoutes';
 
 import User from '../models/userModel';
 import Track from '../models/trackModel';
+import Album from '../models/albumModel';
 
 const app = express();
 
@@ -26,8 +28,6 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/playlist', playlistRouter);
 
 let mongo: any;
-export let jwt: string;
-export let userID: any;
 
 beforeAll(async () => {
   mongo = await MongoMemoryServer.create();
@@ -37,10 +37,6 @@ beforeAll(async () => {
   let users: any = usersArray.map(async (user) => await User.create(user));
 
   users = await Promise.all(users);
-
-  const { token, userId } = await getJwt();
-  jwt = token;
-  userID = userId;
 
   tracks.forEach(async (track) => {
     //Get random user index from user array
@@ -52,15 +48,18 @@ beforeAll(async () => {
     //Create trak with user as artist
     await Track.create({ ...track, artist });
   });
+
+  albums.forEach(async (album) => {
+    //Get random user index from user array
+    const randomUserIndex = Math.floor(Math.random() * users.length);
+
+    //Get user with that index and extract the ID
+    const artist = users[randomUserIndex]._id;
+
+    //Create trak with user as artist
+    await Album.create({ ...album, artist });
+  });
 });
-
-// beforeEach(async () => {
-//   const collections = await mongoose.connection.db.collections();
-
-//   for (let collection of collections) {
-//     await collection.deleteMany({});
-//   }
-// });
 
 afterAll(async () => {
   await mongoose.disconnect();
