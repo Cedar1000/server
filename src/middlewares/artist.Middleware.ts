@@ -4,6 +4,17 @@ import Track from '../models/trackModel';
 import catchAsync from '../uitils/catchAsync';
 import AppError from '../uitils/appError';
 
+export const setArtist = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    //Set logged in artist id on request body
+
+    //@ts-ignore
+    req.body.artist = req.user.id;
+
+    next();
+  }
+);
+
 export const isArtist = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     //check if logged in user is an artist
